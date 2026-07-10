@@ -7,10 +7,14 @@ from . import __version__
 from .generator import build_prompt
 from .refine import refine, score_prompt
 from .skills import load_registry
+from .profiles import list_profiles, load_profile, DEFAULT_PROFILE
 
 
 def _add_build_args(p):
     p.add_argument("task", help="what you want the model to do (quote it)")
+    p.add_argument("--profile", default=DEFAULT_PROFILE,
+                   help="model profile (default {}): {}".format(
+                       DEFAULT_PROFILE, ", ".join(list_profiles())))
     p.add_argument("--role", help="override the role line")
     p.add_argument("--success", help="concrete, testable success criteria")
     p.add_argument("--skills", help="comma-separated skill names to force in")
@@ -21,7 +25,7 @@ def _add_build_args(p):
 
 def _build_kwargs(args):
     forced = [s for s in (args.skills.split(",") if args.skills else []) if s.strip()]
-    return dict(role=args.role, success=args.success,
+    return dict(profile=args.profile, role=args.role, success=args.success,
                 skills=forced or None, loop=args.loop)
 
 
@@ -37,7 +41,7 @@ def cmd_new(args):
     _emit(text, args.save)
     score, _, findings = score_prompt(text, args.loop)
     note = " · to improve: {}".format(", ".join(findings)) if findings else " · clean"
-    print("\n# lint: score {:.2f}{}".format(score, note), file=sys.stderr)
+    print("\n# {} · lint {:.2f}{}".format(args.profile, score, note), file=sys.stderr)
     return 0
 
 
@@ -45,7 +49,7 @@ def cmd_loop(args):
     prompt, trail = refine(args.task, _build_kwargs(args),
                            iterations=args.iterations, api=args.api, model=args.model)
     _emit(prompt, args.save)
-    print("\n# refine trail:", file=sys.stderr)
+    print("\n# refine trail ({}):".format(args.profile), file=sys.stderr)
     for t in trail:
         line = "  iter {} [{}] score {:.2f}".format(t["iter"], t["mode"], t["score"])
         if t["action"] != "none":
@@ -53,6 +57,22 @@ def cmd_loop(args):
         if t["findings"]:
             line += " · left: " + ", ".join(t["findings"])
         print(line, file=sys.stderr)
+    return 0
+
+
+def cmd_interview(args):
+    from .interview import run_interview
+    prompt = run_interview()
+    if prompt and args.save:
+        Path(args.save).write_text(prompt, encoding="utf-8")
+        print("saved -> {}".format(args.save), file=sys.stderr)
+    return 0
+
+
+def cmd_profiles(args):
+    for pid in list_profiles():
+        prof = load_profile(pid)
+        print("{:<18} {}".format(pid, prof.get("tagline", "")))
     return 0
 
 
@@ -65,7 +85,8 @@ def cmd_skills(args):
 def main(argv=None):
     ap = argparse.ArgumentParser(
         prog="fablegen",
-        description="Generate lean, Fable-5-tuned master prompts (goal + loop + skills).")
+        description="Generate lean, model-tuned master prompts "
+                    "(discovery + goal + loop + skills + final check).")
     ap.add_argument("--version", action="version",
                     version="fablegen {}".format(__version__))
     sub = ap.add_subparsers(dest="cmd")
@@ -78,9 +99,18 @@ def main(argv=None):
     _add_build_args(p_loop)
     p_loop.add_argument("--iterations", type=int, default=3)
     p_loop.add_argument("--api", action="store_true",
-                        help="use Fable 5 to rewrite (needs ANTHROPIC_API_KEY)")
-    p_loop.add_argument("--model", default="claude-fable-5")
+                        help="use the model to rewrite (needs ANTHROPIC_API_KEY)")
+    p_loop.add_argument("--model", default=None,
+                        help="override the API model id (default: mapped from profile)")
     p_loop.set_defaults(func=cmd_loop)
+
+    p_int = sub.add_parser("interview",
+                           help="interactively answer questions, then generate")
+    p_int.add_argument("--save", metavar="PATH", help="write the final prompt to a file")
+    p_int.set_defaults(func=cmd_interview)
+
+    p_prof = sub.add_parser("profiles", help="list the available model profiles")
+    p_prof.set_defaults(func=cmd_profiles)
 
     p_sk = sub.add_parser("skills", help="list the built-in skill hooks")
     p_sk.set_defaults(func=cmd_skills)

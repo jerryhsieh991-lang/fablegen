@@ -1,0 +1,17 @@
+{
+  "id": "opus-4.8",
+  "display": "Claude Opus 4.8",
+  "family": "claude",
+  "tagline": "XML-structured, context-before-task, effort scaled to complexity.",
+  "role_hint": null,
+  "effort_line": "Run at high/xhigh effort and reason adaptively — don't pad. Scale tool/step effort to task size with a number, not 'be thorough'. End with one sharp directive.",
+  "elicitation": "balanced",
+  "idioms": [
+    "Put context before the task; give one non-overlapping rule per section.",
+    "Structure precedence-sensitive logic as a numbered checklist with an explicit stop rule."
+  ],
+  "guardrail_extra": [],
+  "verify_note": null,
+  "loop_override": null,
+  "notes": "Anthropic's flagship: a calibrated generalist whose strength is judgment. Prompt it like its own system prompt is built — context before task, one rule per section, numbered checklists with explicit stop/verify conditions, and a numeric effort budget scaled to task size. Let it infer and state assumptions rather than gating on questions; keep the prompt concise and end with a single capstone directive. Trust adaptive reasoning; name any wanted parallelism or verification explicitly."
+}

@@ -1,0 +1,17 @@
+{
+  "id": "fable-5",
+  "display": "Claude Fable 5",
+  "family": "claude",
+  "tagline": "Lean prompts, strong heuristics — Fable 5 degrades on bloat.",
+  "role_hint": null,
+  "effort_line": "Give the full spec up front in one turn and run at xhigh effort. Keep this prompt lean — over-prescription degrades Fable 5.",
+  "elicitation": "balanced",
+  "idioms": [
+    "State the goal up front and keep instructions minimal-but-strong.",
+    "Lean on memory and context, not a wall of rules."
+  ],
+  "guardrail_extra": [],
+  "verify_note": null,
+  "loop_override": null,
+  "notes": "Mythos-tier frontier model. Prompt it minimal-with-strong-heuristics: a sharp goal, a short set of strong principles, and room to reason. Give the whole spec in one turn, run at xhigh effort, and lean on memory/compaction rather than exhaustive rules — mega-prompts measurably degrade it."
+}

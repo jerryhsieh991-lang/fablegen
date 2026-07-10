@@ -1,4 +1,7 @@
-# Master Prompt · Claude Fable 5
+# Master Prompt · {{PROFILE_DISPLAY}}
+_{{PROFILE_TAGLINE}}_
+
+{{EFFORT_LINE}}
 
 {{ROLE}}
 
@@ -6,6 +9,8 @@
 {{GOAL}}
 
 **Done when:** {{SUCCESS}}
+
+{{DISCOVERY_BLOCK}}
 {{LOOP_BLOCK}}
 ## Heuristics (few, strong)
 {{HEURISTICS}}
@@ -16,5 +21,6 @@
 ## Guardrails
 {{GUARDRAILS}}
 
+{{FINAL_CHECK_BLOCK}}
 ## Output
 {{OUTPUT}}

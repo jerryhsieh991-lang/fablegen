@@ -12,11 +12,20 @@ class TestBuild(unittest.TestCase):
         self.assertIn("## Goal", p)
         self.assertIn("Fix the login bug", p)
 
+    def test_has_discovery_and_final_check(self):
+        p = build_prompt("build a thing")
+        self.assertIn("## Discovery", p)
+        self.assertIn("## Final check", p)
+
     def test_loop_included_by_default(self):
         self.assertIn("Operating loop", build_prompt("build a thing"))
 
     def test_no_loop_flag_omits_block(self):
-        self.assertNotIn("Operating loop", build_prompt("build a thing", loop=False))
+        p = build_prompt("build a thing", loop=False)
+        self.assertNotIn("Operating loop", p)
+        # discovery + final check still present without the loop
+        self.assertIn("## Discovery", p)
+        self.assertIn("## Final check", p)
 
     def test_empty_task_raises(self):
         with self.assertRaises(ValueError):
@@ -44,6 +53,11 @@ class TestRefine(unittest.TestCase):
         score, _, _ = score_prompt(build_prompt("build a small app"))
         self.assertGreaterEqual(score, 0.0)
         self.assertLessEqual(score, 1.0)
+
+    def test_clean_prompt_scores_perfect(self):
+        p = build_prompt("build a small app", success="the app boots and passes 3 smoke tests")
+        score, _, findings = score_prompt(p)
+        self.assertEqual(score, 1.0, "unexpected lint findings: {}".format(findings))
 
     def test_offline_loop_returns_trail(self):
         prompt, trail = refine("build a small app", {"loop": True}, iterations=2)

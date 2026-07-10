@@ -1,0 +1,17 @@
+{
+  "id": "sonnet-5",
+  "display": "Claude Sonnet 5",
+  "family": "claude",
+  "tagline": "Precise instruction-follower — give explicit steps + a stop condition.",
+  "role_hint": null,
+  "effort_line": "Give explicit, itemized steps and a numeric effort/step budget with a concrete stop condition. Sonnet 5 follows precise instructions better than it infers, so spell out the desired behavior.",
+  "elicitation": "balanced",
+  "idioms": [
+    "Give trigger → action example pairs, not just abstract rules.",
+    "State a numeric step/effort budget and an explicit stop condition for autonomous work."
+  ],
+  "guardrail_extra": [],
+  "verify_note": null,
+  "loop_override": null,
+  "notes": "Mid-tier workhorse: fast, cost-efficient, optimized for precise instruction-following rather than open-ended inference. Needs more explicit, itemized steering than Opus: numbered decision steps with per-step stop conditions and concrete trigger->action examples. Let it act on reasonable defaults and state assumptions in one line; for any multi-step work, give a numeric budget and a checkable completion condition, since it doesn't sustain open-ended judgment as gracefully as Opus without one."
+}

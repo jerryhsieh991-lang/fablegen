@@ -1,0 +1,19 @@
+{
+  "id": "gpt-5.5-instant",
+  "display": "GPT-5.5 (instant)",
+  "family": "openai",
+  "tagline": "Flat Markdown + numbered priorities; context-first, penalizes over-asking.",
+  "role_hint": null,
+  "effort_line": "Use flat Markdown and numbered priority lists, not nested XML. State the desired length directly and say which steps to do silently vs. narrate.",
+  "elicitation": "context-first",
+  "idioms": [
+    "Arbitrate competing instructions with a numbered 'priority order' block.",
+    "Front-load every fact it needs; forbid asking about anything context already answers."
+  ],
+  "guardrail_extra": [
+    "Avoid Claude-isms: no nested-XML scaffolding, no softening/therapy-speak, no faux-candor fillers like 'honestly' or 'my blunt take'."
+  ],
+  "verify_note": null,
+  "loop_override": null,
+  "notes": "OpenAI's fast ChatGPT model: context-saturated, tool-mediated, and highly steerable when told plainly. Prompt it with flat Markdown headers and numbered priority lists rather than nested XML. Front-load all needed facts and forbid redundant questions — its own prompt penalizes over-asking and using irrelevant context. Give explicit controls (length, which steps to narrate vs. do silently, loop stop conditions); avoid Claude-style tag nesting and tonal fillers its prompt bans."
+}

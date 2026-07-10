@@ -27,6 +27,31 @@ easy to audit. **Rejected:** pulling in `anthropic`/`requests`/`click`.
 deterministic linter/trimmer; `--api` is a real Fable-5 rewrite. **Rejected:** a
 scheduled daemon that executes prompts (heavier, needs a key to do anything).
 
+### v0.2: multi-model profiles, discovery gate, final check — 2026-07-10
+Added a per-model profile system (`fable-5`, `opus-4.8`, `sonnet-5`, `gpt-5.5-instant`,
+`claude-design`), a discovery/interview gate, and a final-check block.
+**Reason:** the user asked for per-model tuning + "ask the user until the goal is
+understood, then loop, then final-check." Profiles were built from **deep research into
+each model's own system prompt** (the four provided .md files) plus agent guides —
+the elicitation stance is the key differentiator: `claude-design` is clarify-first
+(~5–10 batched questions), Opus/Sonnet proceed on stated assumptions, `gpt-5.5-instant`
+is context-first because its own prompt *penalizes* over-asking. **Rejected:** one
+generic prompt for all models (would misfire on GPT and under-steer Sonnet); a separate
+Markdown+JSON pair per model (kept one JSON per model — readable and loadable, stdlib-only).
+
+### Discovery is a prompt block, not just a CLI feature — 2026-07-10
+The "interview until understood" lives in TWO places: a Discovery block inside every
+generated prompt (tuned by the profile's elicitation stance), and a `fablegen interview`
+CLI that asks the user directly. **Reason:** the generated-prompt version works in any
+harness with any model; the CLI version helps compose the prompt. **Rejected:** a runtime
+that executes the interview itself (that's the OS-bloat direction we already refused).
+
+### Lean budget raised 400 → 600 words — 2026-07-10
+**Reason:** discovery + loop + final-check are all high-value; a full well-formed prompt
+lands ~500–590 words. 600 still flags genuine bloat (over-long custom heuristics), so the
+linter stays meaningful. **Rejected:** trimming the sourced discovery/loop content to hit
+an arbitrary 400.
+
 ### CLI-first, Claude-Code-pluggable — 2026-07-10
 Ship a standalone CLI plus a thin `/fable-gen` command file.
 **Reason:** the user wants a GitHub repo usable anywhere *and* inside Claude Code.

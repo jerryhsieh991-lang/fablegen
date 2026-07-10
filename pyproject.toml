@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fablegen"
-version = "0.1.0"
-description = "A master-prompt generator for Claude Fable 5 — lean prompts with goal, loop, and skill scaffolding."
+version = "0.2.0"
+description = "A multi-model master-prompt generator — lean prompts with discovery, goal, loop, skills, and a final check, tuned per model."
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }
@@ -28,4 +28,4 @@ fablegen = "fablegen.cli:main"
 packages = ["fablegen"]
 
 [tool.setuptools.package-data]
-fablegen = ["templates/*.md", "templates/*.json"]
+fablegen = ["templates/*.md", "templates/*.json", "profiles/*.json"]

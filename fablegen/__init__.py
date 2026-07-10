@@ -1,11 +1,16 @@
-"""fablegen — a master-prompt generator for Claude Fable 5.
+"""fablegen — a multi-model master-prompt generator.
 
-Generates lean prompts carrying a goal block, an operating-loop protocol,
-and auto-matched skill hooks. Public API: build_prompt, refine, score_prompt.
+Generates lean prompts carrying a discovery gate (interview-first), a goal
+block, an operating-loop protocol, auto-matched skill hooks, and a final check —
+tuned per model via profiles. Public API below.
 """
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 from .generator import build_prompt  # noqa: E402,F401
 from .refine import refine, score_prompt  # noqa: E402,F401
+from .profiles import list_profiles, load_profile  # noqa: E402,F401
 
-__all__ = ["build_prompt", "refine", "score_prompt", "__version__"]
+__all__ = [
+    "build_prompt", "refine", "score_prompt",
+    "list_profiles", "load_profile", "__version__",
+]

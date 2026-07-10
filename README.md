@@ -1,17 +1,39 @@
 # fablegen
 
-A master-prompt generator for **Claude Fable 5**. You describe a task; it hands back a
-**lean** prompt that already carries a goal block, an operating-loop protocol, and
-auto-matched skill hooks — the scaffolding you'd otherwise write by hand every time.
+A **multi-model master-prompt generator**. You describe a task; it hands back a
+**lean** prompt tuned to a specific model, carrying five things you'd otherwise write
+by hand every time:
 
-It is deliberately *not* a "prompt OS." Frontier models like Fable 5 perform best on
-minimal-with-strong-heuristics prompts and get **worse** when you bury them in rules, so
-fablegen optimizes for lean output and even lints prompts that run long.
+1. a **discovery gate** — the model interviews you until the goal is actually understood,
+2. a **goal** with a testable *Done when*,
+3. an **operating loop** (orient → plan → act → check → decide),
+4. auto-matched **skill hooks**, and
+5. a **final check** before it calls the work done.
 
-- Zero dependencies — standard library only. Clone and run.
+It is deliberately *not* a "prompt OS." Frontier models perform best on
+minimal-with-strong-heuristics prompts and get **worse** when buried in rules, so
+fablegen optimizes for lean output and lints prompts that run long.
+
+- **Per-model profiles.** Each model is prompted differently — `fablegen profiles`.
+- **Zero dependencies.** Standard library only (even the API call uses `urllib`). Clone and run.
 - Works as a standalone CLI **and** plugs into Claude Code as `/fable-gen`.
-- "Both" loops: every generated prompt self-loops toward its goal, and `fablegen loop`
-  refines the prompt itself (free offline linter, or a real Fable-5 rewrite with `--api`).
+- **Both loops:** every generated prompt self-loops toward its goal, and `fablegen loop`
+  refines the prompt itself (free offline linter, or a live model rewrite with `--api`).
+
+## Why per-model profiles
+
+The models genuinely want different prompts — this is researched from each model's own
+behavior, not guessed:
+
+| Profile | Elicitation stance | Style |
+| --- | --- | --- |
+| `fable-5` | balanced | lean; bloat degrades it; xhigh effort |
+| `opus-4.8` | balanced (proceed on stated assumptions) | XML-structured, context-before-task, numeric effort budget |
+| `sonnet-5` | balanced (needs explicit steering) | itemized steps + a concrete stop condition |
+| `gpt-5.5-instant` | **context-first** (penalizes over-asking) | flat Markdown + numbered priorities; no Claude-isms |
+| `claude-design` | **clarify-first** (interview ~5–10 questions) | understand → explore → todo → build → verify |
+
+See [`examples/`](examples/) for a full generated prompt per model.
 
 ## Install
 
@@ -28,62 +50,65 @@ Requires Python 3.9+.
 ## Quickstart
 
 ```bash
-fablegen new "Build a Rust CLI that watches a folder and syncs changes to S3" \
+fablegen new "Build a Rust CLI that watches a folder and syncs to S3" \
+  --profile opus-4.8 \
   --success "syncs a 1k-file tree in <2s and survives network drops"
 ```
 
-Prints a ready-to-paste master prompt. A short lint score goes to stderr, so you can pipe
-just the prompt:
+Prints a ready-to-paste master prompt; a lint score goes to stderr, so you can pipe just
+the prompt:
 
 ```bash
-fablegen new "..." > prompt.md          # clean prompt in the file
-fablegen new "..." --save prompt.md     # same, and still printed
+fablegen new "..." --profile sonnet-5 > prompt.md
 ```
 
-Then switch to Fable 5 (`/model claude-fable-5`) and paste it as your first message —
-at high/xhigh effort for hard tasks.
+Prefer to be interviewed instead of composing flags? Let fablegen ask you:
 
-## What a generated prompt looks like
+```bash
+fablegen interview
+```
 
-Every prompt has the same lean skeleton: a role line, a **Goal** with a testable
-**Done when**, an **Operating loop**, a few strong heuristics, the **skills to reach
-for**, guardrails, and an output contract. See [`examples/`](examples/) for full outputs.
+It asks what you're building, who it's for, what "done" means, which model, and which
+skills — then generates, and keeps refining while you add context.
 
 ## Commands
 
 | Command | What it does |
 | --- | --- |
-| `fablegen new "<task>"` | Generate one master prompt. |
-| `fablegen loop "<task>"` | Generate, then refine over N iterations (`--iterations`, `--api`). |
-| `fablegen skills` | List the built-in skill hooks and their triggers. |
+| `fablegen new "<task>" [--profile ID]` | Generate one master prompt. |
+| `fablegen loop "<task>" [--profile ID]` | Generate, then refine over N iterations (`--iterations`, `--api`). |
+| `fablegen interview` | Interactive builder — answer questions, get a prompt. |
+| `fablegen profiles` | List the model profiles and their taglines. |
+| `fablegen skills` | List the built-in skill hooks and triggers. |
 
-Useful flags on `new`/`loop`: `--success` (testable criteria — always worth setting),
-`--role`, `--skills a,b,c` (force specific skills), `--no-loop`, `--save PATH`.
+Flags on `new`/`loop`: `--profile`, `--success` (testable criteria — always worth
+setting), `--role`, `--skills a,b,c`, `--no-loop`, `--save PATH`.
 
 ## The two loops
 
-1. **In the prompt.** The generated prompt tells the model to run
-   *orient → plan → act → check → decide*, repeating until the success criteria are met,
-   with explicit stop conditions. Use `--no-loop` for one-shot prompts.
+1. **In the prompt.** The generated prompt runs *orient → plan → act → check → decide*
+   until the success criteria are met, with explicit stop conditions. `claude-design`
+   uses its own *understand → explore → todo → build → verify* loop. `--no-loop` omits it.
 
 2. **On the prompt.** `fablegen loop` improves the prompt itself:
-   - **offline (default):** a deterministic linter that scores against a Fable-5 rubric
-     (clear goal, measurable success, loop present, lean length, …) and trims toward
-     lean. No API key needed.
-   - **`--api`:** sends the draft to Fable 5 and asks for a leaner, sharper rewrite.
-     Needs `ANTHROPIC_API_KEY`. Override the model with `--model` (ids change over time).
+   - **offline (default):** a deterministic linter scoring against a rubric (clear goal,
+     measurable success, discovery + loop + final-check present, lean length) and trimming
+     toward lean. No API key.
+   - **`--api`:** sends the draft to the profile's model for a leaner rewrite. Needs
+     `ANTHROPIC_API_KEY`; override the model with `--model` (ids change over time).
 
-## Extend the skills
+## Extend it
 
-Skill hooks live in [`fablegen/templates/skills.json`](fablegen/templates/skills.json) —
-`name`, `triggers` (substrings matched against the task), and `when`. Add your own
-entries, or force any skill by name with `--skills my-skill`.
+- **Skills** live in [`fablegen/templates/skills.json`](fablegen/templates/skills.json)
+  (`name`, `triggers`, `when`). Add your own, or force any with `--skills my-skill`.
+- **Profiles** live in [`fablegen/profiles/`](fablegen/profiles/) — one JSON per model
+  (elicitation stance, effort line, idioms, guardrails, optional loop override). Copy one
+  to add a new model.
 
 ## Use it inside Claude Code
 
-See [`claude_code/INSTALL.md`](claude_code/INSTALL.md). Short version: `pip install -e .`,
-copy `claude_code/commands/fable-gen.md` into `~/.claude/commands/`, then
-`/fable-gen <your task>`.
+See [`claude_code/INSTALL.md`](claude_code/INSTALL.md): `pip install -e .`, copy
+`claude_code/commands/fable-gen.md` into `~/.claude/commands/`, then `/fable-gen <task>`.
 
 ## Development
 
