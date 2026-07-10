@@ -6,15 +6,16 @@ import sys
 
 from .generator import build_prompt
 from .refine import score_prompt
-from .profiles import list_profiles, DEFAULT_PROFILE
+from .profiles import list_profiles
+from .models import resolve_profile
 
 # (key, question, required)
 _QUESTIONS = [
     ("task", "What do you want the model to do? (one line)", True),
     ("context", "Who/what is it for, and any hard constraints? (enter to skip)", False),
     ("success", "What does 'done' look like — a concrete, testable outcome?", False),
-    ("profile", "Which model? [{}] (enter = {})".format(
-        "/".join(list_profiles()), DEFAULT_PROFILE), False),
+    ("profile", "Which model? [{}] (enter = auto-detect)".format(
+        "/".join(list_profiles())), False),
     ("skills", "Skills to force in? comma-separated (enter to auto-match)", False),
 ]
 
@@ -46,7 +47,7 @@ def run_interview(read=input, out=print, isatty=None):
     if answers.get("context"):
         task += "\n\nContext / constraints: " + answers["context"]
 
-    profile = answers.get("profile") or DEFAULT_PROFILE
+    profile = answers.get("profile") or resolve_profile()[0]
     success = answers.get("success") or None
     skills = [s for s in (answers.get("skills") or "").split(",") if s.strip()] or None
 

@@ -71,13 +71,34 @@ fablegen interview
 It asks what you're building, who it's for, what "done" means, which model, and which
 skills — then generates, and keeps refining while you add context.
 
+## Auto-switch by model
+
+fablegen can detect the model you're on and pick the matching profile itself — no flag:
+
+```bash
+fablegen detect
+# detected model: claude-fable-5[1m] (via ~/.claude/settings.json)
+# resolves to profile: fable-5 — detected model 'claude-fable-5[1m]' ...
+
+fablegen new "build a rate limiter" --model auto   # tuned to the current model
+```
+
+Detection order (highest first): `--profile` → `--model <id>|auto` → `FABLEGEN_PROFILE`
+env → `fablegen use` active config → detected model (env, then `~/.claude/settings.json`)
+→ `fable-5`. Pin one across sessions with `fablegen use opus-4.8` (or a model id like
+`fablegen use claude-opus-4-8`); undo with `fablegen use --clear`.
+
+Using this inside a Sentinel-style workflow? See [SENTINEL.md](SENTINEL.md).
+
 ## Commands
 
 | Command | What it does |
 | --- | --- |
-| `fablegen new "<task>" [--profile ID]` | Generate one master prompt. |
-| `fablegen loop "<task>" [--profile ID]` | Generate, then refine over N iterations (`--iterations`, `--api`). |
+| `fablegen new "<task>" [--model auto\|ID] [--profile ID]` | Generate one master prompt. |
+| `fablegen loop "<task>"` | Generate, then refine over N iterations (`--iterations`, `--api`). |
 | `fablegen interview` | Interactive builder — answer questions, get a prompt. |
+| `fablegen detect` | Show the detected model and which profile it resolves to. |
+| `fablegen use <profile\|model>` | Pin an active profile across sessions (`--clear` to undo). |
 | `fablegen profiles` | List the model profiles and their taglines. |
 | `fablegen skills` | List the built-in skill hooks and triggers. |
 
