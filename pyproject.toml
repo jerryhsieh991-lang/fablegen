@@ -9,7 +9,7 @@ description = "A multi-model master-prompt generator with auto model-detection â
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }
-authors = [{ name = "Your Name" }]
+authors = [{ name = "jerry26307" }]
 keywords = ["prompt-engineering", "claude", "fable-5", "llm", "cli", "agents"]
 classifiers = [
   "Programming Language :: Python :: 3",
@@ -19,7 +19,7 @@ classifiers = [
 dependencies = []  # standard library only â€” clone and run
 
 [project.urls]
-Homepage = "https://github.com/your-username/fablegen"
+Homepage = "https://github.com/jerryhsieh991-lang/fablegen"
 
 [project.scripts]
 fablegen = "fablegen.cli:main"

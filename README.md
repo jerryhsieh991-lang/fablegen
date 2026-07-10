@@ -38,7 +38,7 @@ See [`examples/`](examples/) for a full generated prompt per model.
 ## Install
 
 ```bash
-git clone https://github.com/your-username/fablegen
+git clone https://github.com/jerryhsieh991-lang/fablegen
 cd fablegen
 pip install -e .        # gives you the `fablegen` command
 # or skip install entirely:
@@ -139,5 +139,4 @@ python -m unittest discover -s tests
 
 ## License
 
-MIT — see [LICENSE](LICENSE). Set your name in `LICENSE` and `pyproject.toml` before
-publishing.
+MIT — see [LICENSE](LICENSE).
