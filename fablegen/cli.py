@@ -106,6 +106,27 @@ def cmd_use(args):
     return 0
 
 
+def _to_profile(name):
+    valid = set(list_profiles())
+    if name in valid:
+        return name
+    prof = model_to_profile(name)
+    if not prof:
+        raise ValueError("unknown profile/model '{}'. profiles: {}".format(
+            name, ", ".join(sorted(valid))))
+    return prof
+
+
+def cmd_diff(args):
+    import difflib
+    pa, pb = _to_profile(args.model_a), _to_profile(args.model_b)
+    a = build_prompt(args.task, profile=pa, success=args.success, loop=args.loop).splitlines()
+    b = build_prompt(args.task, profile=pb, success=args.success, loop=args.loop).splitlines()
+    diff = list(difflib.unified_diff(a, b, fromfile=pa, tofile=pb, lineterm=""))
+    print("\n".join(diff) if diff else "(identical prompts for {} and {})".format(pa, pb))
+    return 0
+
+
 def cmd_profiles(args):
     for pid in list_profiles():
         prof = load_profile(pid)
@@ -153,6 +174,15 @@ def main(argv=None):
     p_use.add_argument("name", nargs="?", help="profile id or model id")
     p_use.add_argument("--clear", action="store_true", help="clear the active profile")
     p_use.set_defaults(func=cmd_use)
+
+    p_diff = sub.add_parser("diff",
+                            help="diff the prompts two models get for the same task")
+    p_diff.add_argument("model_a", help="profile or model id")
+    p_diff.add_argument("model_b", help="profile or model id")
+    p_diff.add_argument("task", help="the task to compare (quote it)")
+    p_diff.add_argument("--success", help="shared success criteria")
+    p_diff.add_argument("--no-loop", dest="loop", action="store_false")
+    p_diff.set_defaults(func=cmd_diff)
 
     p_prof = sub.add_parser("profiles", help="list the available model profiles")
     p_prof.set_defaults(func=cmd_profiles)

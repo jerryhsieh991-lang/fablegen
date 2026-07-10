@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fablegen"
-version = "0.3.0"
+version = "0.4.0"
 description = "A multi-model master-prompt generator with auto model-detection — lean prompts with discovery, goal, loop, skills, and a final check, tuned per model."
 readme = "README.md"
 requires-python = ">=3.9"

@@ -97,6 +97,7 @@ Using this inside a Sentinel-style workflow? See [SENTINEL.md](SENTINEL.md).
 | `fablegen new "<task>" [--model auto\|ID] [--profile ID]` | Generate one master prompt. |
 | `fablegen loop "<task>"` | Generate, then refine over N iterations (`--iterations`, `--api`). |
 | `fablegen interview` | Interactive builder — answer questions, get a prompt. |
+| `fablegen diff <a> <b> "<task>"` | Show how two models' prompts differ for the same task. |
 | `fablegen detect` | Show the detected model and which profile it resolves to. |
 | `fablegen use <profile\|model>` | Pin an active profile across sessions (`--clear` to undo). |
 | `fablegen profiles` | List the model profiles and their taglines. |

@@ -4,7 +4,7 @@ Generates lean prompts carrying a discovery gate (interview-first), a goal
 block, an operating-loop protocol, auto-matched skill hooks, and a final check —
 tuned per model via profiles. Public API below.
 """
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 
 from .generator import build_prompt  # noqa: E402,F401
 from .refine import refine, score_prompt  # noqa: E402,F401
