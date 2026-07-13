@@ -27,13 +27,13 @@ easy to audit. **Rejected:** pulling in `anthropic`/`requests`/`click`.
 deterministic linter/trimmer; `--api` is a real Fable-5 rewrite. **Rejected:** a
 scheduled daemon that executes prompts (heavier, needs a key to do anything).
 
-### v0.3: auto model-detection, NOT a Sentinel rewrite — 2026-07-10
+### v0.3: auto model-detection, NOT a prompt-OS rewrite — 2026-07-10
 Added `--model auto`, a model->profile map, `fablegen use`/`detect`, and a persistent
 active-profile config. fablegen now detects the current model (env, then
 `~/.claude/settings.json`) and picks the profile itself.
 **Reason:** the user asked to "auto-switch the generator when I switch models" and to
-"plug it into Sentinel (the prompt OS)." The detection belongs in fablegen — a tool that
-can actually read state at runtime. **Rejected (deliberately):** modifying Sentinel
+"plug it into a prompt-OS layer." The detection belongs in fablegen — a tool that
+can actually read state at runtime. **Rejected (deliberately):** modifying a separate prompt-OS
 itself. Sentinel is an output-style (text instruction layer), so it cannot intercept
 `/model` switches; asking it to would turn a workflow into a runtime — the exact thing its
 anti-expansion gate refuses. The wish has 0 cross-project evidence and Sentinel is in
