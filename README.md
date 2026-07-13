@@ -88,7 +88,6 @@ env → `fablegen use` active config → detected model (env, then `~/.claude/se
 → `fable-5`. Pin one across sessions with `fablegen use opus-4.8` (or a model id like
 `fablegen use claude-opus-4-8`); undo with `fablegen use --clear`.
 
-Using this inside a Sentinel-style workflow? See [SENTINEL.md](SENTINEL.md).
 
 ## Commands
 
