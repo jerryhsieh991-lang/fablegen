@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Durable weekly scheduler for fablegen's model-profile refresh (macOS launchd).
+  Fires the SAFE, human-in-the-loop reminder every Monday at 09:07 local.
+
+  Activate (from the repo root):
+    cp scripts/com.fablegen.weekly-refresh.plist ~/Library/LaunchAgents/
+    # edit the two __REPO__ paths below to your absolute fablegen path first, then:
+    launchctl load ~/Library/LaunchAgents/com.fablegen.weekly-refresh.plist
+  Deactivate:
+    launchctl unload ~/Library/LaunchAgents/com.fablegen.weekly-refresh.plist
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.fablegen.weekly-refresh</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>__REPO__/scripts/weekly-refresh-reminder.sh</string>
+    </array>
+
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Weekday</key><integer>1</integer>
+        <key>Hour</key><integer>9</integer>
+        <key>Minute</key><integer>7</integer>
+    </dict>
+
+    <key>StandardOutPath</key>
+    <string>__REPO__/scripts/logs/launchd.out.log</string>
+    <key>StandardErrorPath</key>
+    <string>__REPO__/scripts/logs/launchd.err.log</string>
+    <key>RunAtLoad</key>
+    <false/>
+</dict>
+</plist>
