@@ -1,0 +1,19 @@
+{
+  "id": "codex",
+  "display": "OpenAI Codex (GPT-5.6)",
+  "family": "openai",
+  "tagline": "Persistence-biased autonomous coder with its own tuned harness — scope the task and encode durable rules in AGENTS.md, don't coax effort or autonomy from prose.",
+  "role_hint": null,
+  "effort_line": "Reasoning effort is a config/CLI dial (minimal|low|medium|high|xhigh via model_reasoning_effort, /model, --config), NOT prose — never write 'think harder'. medium is the interactive default; low for quick scoped edits; high/xhigh for hard long-horizon debugging.",
+  "elicitation": "assume-and-proceed",
+  "idioms": [
+    "Structure task prompts as Goal / Context (name exact files, folders, and the literal error or stack trace near the top) / Constraints ('touch only X', no unrelated refactors, no new deps) / Done-when (verifiable end state: tests pass, bug no longer repros).",
+    "Put durable conventions, build/test commands, and style rules in AGENTS.md — a short accurate file beats a long vague one; split into nested per-directory files (precedence: global ~/.codex → git root → cwd, closer overrides, ~32 KiB cap)."
+  ],
+  "guardrail_extra": [
+    "AGENTS.md is loaded ONCE at session start — it is NOT reliably re-read per turn and NOT restored after auto /compact (that's Claude Code's CLAUDE.md, mis-attributed)."
+  ],
+  "verify_note": "Never end a turn with only a plan — the deliverable is working code. Reconcile every stated TODO as Done/Blocked/Cancelled before finishing.",
+  "loop_override": null,
+  "notes": "CORRECTION: GPT-5.3-Codex is DEPRECATED. The current Codex default is GPT-5.6 (Terra = balanced default, Sol = flagship for hard work, Luna = fast), GA 2026-07-09. Effort has five levels (minimal|low|medium|high|xhigh). It's concise by default and mirrors user tone; suppress its short collaborative progress preambles with 'no status updates, only a final summary'. Large-context drift and compaction-loop bugs are actively reported (openai/codex #19116, #8481, #29356, and the AGENTS.md re-read gap #8547/#5772) — mitigate structurally (lean AGENTS.md, exact paths + failing test front-loaded), not with prose. Loop note: Bias-to-action is built in ('default to implementing with reasonable assumptions; do not end your turn with clarifications unless truly blocked'). Don't fight it with autonomy prompts; govern it with scope constraints + a tight sandbox."
+}

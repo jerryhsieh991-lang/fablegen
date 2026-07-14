@@ -1,0 +1,19 @@
+{
+  "id": "gemini-3",
+  "display": "Google Gemini 3.x",
+  "family": "google",
+  "tagline": "Terse, context-first, default-temperature reasoner — punishes GPT/Claude habits (low temp, CoT scaffolding, dropped tool-loop signatures).",
+  "role_hint": null,
+  "effort_line": "Control reasoning with categorical thinking_level (minimal|low|medium|high) on Gemini 3 — NOT hand-written CoT. Defaults: high on 3.1 Pro, MEDIUM on 3.5 Flash (only the older gemini-3-flash-preview defaulted high).",
+  "elicitation": "context-first",
+  "idioms": [
+    "Leave temperature at the default 1.0 — ideally don't set temperature/top_p/top_k at all; the model is tuned for defaults.",
+    "Put ALL data/context FIRST and the task/question at the very END, with an explicit bridge ('Based on the document above, ...')."
+  ],
+  "guardrail_extra": [
+    "Never lower temperature below 1.0 on Gemini 3 — it causes looping and degraded math/reasoning (a GPT/Claude determinism habit that backfires here)."
+  ],
+  "verify_note": "Treat combining response-schema JSON mode with function calling in a single call as fragile/unsupported — verify for your exact model version rather than assuming.",
+  "loop_override": null,
+  "notes": "1M-token multimodal input, 64k output. For dense OCR/PDF parsing raise media_resolution (higher token cost); lower it for video/context budget. Grounding-clause + current-date-clause measurably reduce hallucination. Thought summaries opt-in via includeThoughts:true; you're billed for thinking tokens (track total_thought_tokens). Nov 2025 structured-output upgrade added anyOf/$ref/prefixItems/min-max/type:null and propertyOrdering for 2.5+. Gemini 3 folded in Computer Use and an Interactions API where structured output is set via response_format {type, mime_type, schema} rather than the classic GenerationConfig response_schema."
+}

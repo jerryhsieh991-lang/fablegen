@@ -1,0 +1,19 @@
+{
+  "id": "local",
+  "display": "Open-weight / local (DeepSeek·Qwen·Llama)",
+  "family": "open-weight",
+  "tagline": "Template-first and sampling-sensitive: the chat template, special tokens, and recommended sampling matter more than prose — and 'system prompt' behavior differs sharply per family.",
+  "role_hint": null,
+  "effort_line": "No single effort knob — per-family, template-driven. Hybrids (Qwen3, DeepSeek-V3.1): toggle thinking via template flag (Qwen enable_thinking, DeepSeek thinking=True) or Qwen soft switches /think //no_think (single-slash; most-recent switch wins).",
+  "elicitation": "assume-and-proceed",
+  "idioms": [
+    "Set the family's recommended sampling explicitly: Qwen3 thinking = temp 0.6 / top_p 0.95 / top_k 20; Qwen3 non-thinking = 0.7 / 0.8 / 20; DeepSeek-R1 = temp 0.6 with no system prompt — and NEVER greedy-decode a thinking model (degradation + endless repetition).",
+    "For any structured or tool output, constrain decoding (llama.cpp GBNF / vLLM guided_json / Outlines) instead of trusting 'return valid JSON'; always wrap tool calls with validation + retry."
+  ],
+  "guardrail_extra": [
+    "Don't reuse one system prompt across families — DeepSeek-R1 degrades with a system persona and with few-shot CoT, while Qwen3/Llama want an explicit persona + examples."
+  ],
+  "verify_note": "Confirm the runtime actually emits the opening <think> tag before shipping a reasoning model, and verify the rendered template with the runtime (--jinja) rather than hand-concatenating role strings.",
+  "loop_override": null,
+  "notes": "The dominant variable is the exact chat template / special tokens, not Markdown-vs-XML styling — a wrong template silently degrades everything downstream. Tool reliability is materially below frontier and format-fragile — constrained decoding is the biggest reliability lever at small scale. For math extraction, Qwen3 recommends the literal 'Please reason step by step, and put your final answer within \\boxed{}' (that's for parsing the answer out of a verbose trace, not for eliciting reasoning). Ongoing GGUF/llama.cpp template fixes (Unsloth reuploads through 2025-2026) mean local template correctness is a live, moving target, not settled — keep runtime and template current (empty-think poisoning once caused 80%+ premature turn aborts). Loop note: Hybrid think/non-think is now the default architecture (DeepSeek-V3.1→V3.2, Qwen3/Qwen3.5) — one model, mode chosen via a template flag or /think //no_think, superseding the older 'pick R1 vs V3' advice. To shorten a verbose reasoner, switch to non-thinking mode rather than fighting it with 'be brief'."
+}

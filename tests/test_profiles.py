@@ -31,8 +31,8 @@ class TestProfiles(unittest.TestCase):
             self.assertIn(load_profile(pid)["display"], p)
 
     def test_elicitation_differs_by_model(self):
-        self.assertIn("understand before you act", build_prompt("x", profile="opus-4.8"))
-        self.assertIn("mine context", build_prompt("x", profile="gpt-5.5-instant"))
+        self.assertIn("bias to action", build_prompt("x", profile="gpt-5.6"))
+        self.assertIn("mine context", build_prompt("x", profile="opus-4.8"))
         self.assertIn("interview first", build_prompt("x", profile="claude-design"))
 
     def test_gpt_profile_bans_claude_isms(self):

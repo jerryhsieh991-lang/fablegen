@@ -1,17 +1,19 @@
 {
   "id": "fable-5",
   "display": "Claude Fable 5",
-  "family": "claude",
-  "tagline": "Lean prompts, strong heuristics — Fable 5 degrades on bloat.",
+  "family": "anthropic",
+  "tagline": "Frontier long-horizon agent that rewards terse high-level specs + explicit intent/boundaries — and punishes Opus-era enumerate-every-rule, show-your-work prompting.",
   "role_hint": null,
-  "effort_line": "Give the full spec up front in one turn and run at xhigh effort. Keep this prompt lean — over-prescription degrades Fable 5.",
-  "elicitation": "balanced",
+  "effort_line": "effort (low|medium|high|xhigh|max) is the only reasoning/verbosity dial — adaptive thinking is ALWAYS ON and cannot be disabled (type:'disabled' rejected, no budget_tokens). Default and recommended START is `high` (NOT xhigh like Opus); lower-effort Fable often exceeds xhigh on prior models, so defaulting xhigh/max wastes cost and causes unrequested refactoring/option-surveying/scope creep.",
+  "elicitation": "context-first",
   "idioms": [
-    "State the goal up front and keep instructions minimal-but-strong.",
-    "Lean on memory and context, not a wall of rules."
+    "Give it the hardest, fully-specified version of the problem and let it scope/ask/execute — 'start at the top of your difficulty range'; it's only marginal on easy tasks.",
+    "Steer each behavior with ONE brief high-level instruction (brevity, boundaries, checkpoints) rather than enumerated rule lists — brief now beats exhaustive on this model."
   ],
-  "guardrail_extra": [],
-  "verify_note": null,
+  "guardrail_extra": [
+    "NEVER instruct it to echo, transcribe, reflect on, or 'show your thinking'/explain internal reasoning — this trips the reasoning_extraction classifier, returns stop_reason 'refusal', and forces fallback to Opus 4.8."
+  ],
+  "verify_note": "Fresh-context verifier subagents outperform self-critique for checking Fable's work; it dispatches parallel/long-lived subagents more readily than Opus, so orchestrate asynchronously (delegate independent subtasks and keep working).",
   "loop_override": null,
-  "notes": "Mythos-tier frontier model. Prompt it minimal-with-strong-heuristics: a sharp goal, a short set of strong principles, and room to reason. Give the whole spec in one turn, run at xhigh effort, and lean on memory/compaction rather than exhaustive rules — mega-prompts measurably degrade it."
+  "notes": "Released 2026-06-09 as claude-fable-5 (1M context, 128k max output, $10/M in + $50/M out); claude-mythos-5 is the same model without safety classifiers (Project Glasswing). Availability has been in flux (pulled then 'Redeploying Fable 5') — keep an Opus 4.8 fallback wired. New refusal contract: safety classifiers (offensive cyber, bio/life-sciences, reasoning-extraction) return stop_reason:'refusal' as a 200; you aren't billed for a pre-output refusal and fallback credit refunds the prompt-cache retry cost (>95% of sessions need no fallback). For long async runs define a client-side send_to_user tool to surface verbatim content mid-turn (tool inputs are never summarized) — but you must also instruct it to call the tool, or it rarely does. In the final user-facing summary, tell it to drop working shorthand and re-ground someone who saw none of the work. Loop note: Long async runs may end with 'I'll now run X' without the tool call, or ask permission it doesn't need — an autonomous-mode reminder ('continue, do it end to end') fixes both. Provide a markdown memory/notes file (one lesson per file) so it accumulates lessons across runs — a distinctive Fable strength."
 }

@@ -36,6 +36,10 @@ Do not start the work until you understand it. In one batched round, ask about: 
 ## Discovery — mine context, then ask only what's missing
 Restate the goal in one sentence. First use everything already provided — context, memory, prior turns, files — and do NOT ask for anything it already answers. Ask a clarifying question ONLY when it is genuinely blocking, no provided context resolves it, and a different answer would change the plan; otherwise state the assumption in one line and proceed. Never pause to confirm a context-supported detail. Keep any questions to a single batched round.
 """,
+    "assume-and-proceed": """
+## Discovery — bias to action, state assumptions inline
+Restate the goal in one sentence, then start. Do NOT end your turn with clarifying questions unless you are genuinely blocked — pick the most reasonable interpretation, state the assumption you made in one line, and proceed. Only stop to ask when an answer is truly blocking, would change the whole approach, and no reasonable default exists. Surface remaining assumptions at the end, not as gates up front.
+""",
 }
 
 FINAL_CHECK_BLOCK = """

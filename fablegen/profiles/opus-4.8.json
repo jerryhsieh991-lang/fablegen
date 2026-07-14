@@ -1,17 +1,19 @@
 {
   "id": "opus-4.8",
   "display": "Claude Opus 4.8",
-  "family": "claude",
-  "tagline": "XML-structured, context-before-task, effort scaled to complexity.",
+  "family": "anthropic",
+  "tagline": "Literal, lean-prompt frontier reasoner — set the effort dial and trust its reasoning; aggressive CRITICAL/you-MUST scaffolding and hand-written step plans now backfire.",
   "role_hint": null,
-  "effort_line": "Run at high/xhigh effort and reason adaptively — don't pad. Scale tool/step effort to task size with a number, not 'be thorough'. End with one sharp directive.",
-  "elicitation": "balanced",
+  "effort_line": "output_config.effort (low|medium|high|xhigh|max) is the primary dial, paired with adaptive thinking. On Opus 4.8 thinking is OFF unless you set thinking:{type:'adaptive'}; manual budget_tokens returns 400 (thinking:{type:'disabled'} is still accepted and equals omitting).",
+  "elicitation": "context-first",
   "idioms": [
-    "Put context before the task; give one non-overlapping rule per section.",
-    "Structure precedence-sensitive logic as a numbered checklist with an explicit stop rule."
+    "Front-load a complete spec in one turn: long documents at the TOP, query/instructions/examples at the END (up to ~30% quality gain on complex multi-doc inputs); wrap docs in <document>/<document_content>/<source>.",
+    "State scope explicitly — it's literal and won't generalize an instruction across items or infer unmade requests ('apply this to every section, not just the first'); give the reason behind a rule ('do X because Y') so it generalizes from the explanation."
   ],
-  "guardrail_extra": [],
-  "verify_note": null,
+  "guardrail_extra": [
+    "Don't use aggressive 'CRITICAL / you MUST / ALWAYS / if in doubt use X' tool-forcing — on 4.5/4.6+ (and the even-more-literal 4.7/4.8) it overtriggers tools/skills and overthinks; downgrade to plain 'Use this tool when...'."
+  ],
+  "verify_note": "Code-review harnesses regressed because 4.8 obeys 'only high-severity / be conservative' faithfully — instead instruct 'report every finding with confidence + severity; filter downstream.'",
   "loop_override": null,
-  "notes": "Anthropic's flagship: a calibrated generalist whose strength is judgment. Prompt it like its own system prompt is built — context before task, one rule per section, numbered checklists with explicit stop/verify conditions, and a numeric effort budget scaled to task size. Let it infer and state assumptions rather than gating on questions; keep the prompt concise and end with a single capstone directive. Trust adaptive reasoning; name any wanted parallelism or verification explicitly."
+  "notes": "Flagship of the 2026 line (Fable 5, Mythos 5, Opus 4.8/4.7/4.6/4.5, Sonnet 5/4.6, Haiku 4.5). 1M-token default context. The 'start at xhigh' advice is Opus-4.7/4.8-specific — Sonnet 5 defaults to high, Fable 5 starts at high; don't read it as universal. Sonnet 5 differs: adaptive thinking ON by default, a new tokenizer emits ~30% more tokens (retune max_tokens), non-default sampling 400. Haiku 4.5 is NOT in the effort/adaptive family — it still uses manual budget_tokens. Thinking display defaults to 'omitted' on newest models; set thinking.display:'summarized' to see reasoning. For noisy long-context corpora, ask it to extract relevant quotes into <quotes> first, then answer. Opus 4.8 has a persistent cream/serif frontend 'house style' — override it explicitly."
 }

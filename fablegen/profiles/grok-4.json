@@ -1,0 +1,19 @@
+{
+  "id": "grok-4",
+  "display": "xAI Grok 4.x",
+  "family": "xai",
+  "tagline": "Reasoning-first, natively-agentic, real-time X/web search — prompt flat and direct, tune reasoning_effort, and supply your OWN guardrails (base persona is deliberately less filtered).",
+  "role_hint": null,
+  "effort_line": "Reasoning is ALWAYS ON on flagship 4.5 and cannot be disabled; tune depth with reasoning_effort = low|medium|high (default high). Only Grok 4.3 (Bedrock/Foundry) adds effort:'none' to disable, defaulting to low there.",
+  "elicitation": "assume-and-proceed",
+  "idioms": [
+    "For real-time/social/breaking-news, pass the native server-side tools (x_search(), web_search(), code_execution) via the tools param and let Grok decide when to call; scope x_search with allowed_x_handles/excluded_x_handles (<=20, mutually exclusive) and from_date/to_date.",
+    "Put persona AND your own guardrails in the system prompt — the base model is deliberately less filtered ('treat users as adults, don't moralize'), so you own refusal behavior; it follows persona faithfully and won't over-refuse."
+  ],
+  "guardrail_extra": [
+    "Don't send presence_penalty, frequency_penalty, or stop to reasoning models (4.5/4.3/4.20-reasoning) — they error out."
+  ],
+  "verify_note": "Server-side tool results return a citations field with source attribution — surface it for verifiability.",
+  "loop_override": null,
+  "notes": "Grok 4.5 is the current flagship (~$2/$6 per 1M tokens, knowledge cutoff Feb 1 2026), always-on reasoning with native web + X + code-execution tools. Grok 4.3 (launched 2026-06-15 on AWS Bedrock 'Mantle' + Microsoft Foundry) is the configurable-effort exception with effort:'none'. Context is large (4.5 and 4.20 up to ~2M; 4.3 = 1M; original grok-4-0709 = 256K). Tool use is trained-in, not bolted-on — always-on reasoning makes multi-step agent loops consistent. CORRECTION on sourcing: the Live Search retirement (Jan 12 2026) is real, but the originally-cited aibase URL described the launch, not the retirement — the authoritative source is xAI's deprecation notice / Agent Tools migration guidance (410 Gone after removal)."
+}

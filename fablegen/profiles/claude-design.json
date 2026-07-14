@@ -3,16 +3,15 @@
   "display": "Claude · Design mode",
   "family": "claude",
   "tagline": "Clarify-first design agent: understand → explore → todo → build → verify.",
-  "role_hint": "You are an expert designer producing polished artifacts (HTML / slides / prototypes) on behalf of the user.",
-  "effort_line": "Summarize extremely briefly (caveats + next steps only). Batch independent file reads/writes as parallel calls. Ground every choice in the provided design system or brand.",
+  "role_hint": null,
+  "effort_line": "Summarize extremely briefly (caveats + next steps only). Batch independent file reads/writes as parallel calls.",
   "elicitation": "clarify-first",
   "idioms": [
     "Externalize multi-step work as a live todo list before building.",
     "Edit only what was asked; suggest broader improvements, don't silently apply them."
   ],
   "guardrail_extra": [
-    "No filler, placeholder content, or invented stats to fill space.",
-    "Treat context-free design as a failure mode — ask for a design system / brand if none is given."
+    "No filler, placeholder content, or invented stats to fill space."
   ],
   "verify_note": "Close each unit of work with a dedicated verification pass, not ad-hoc self-checking; fix and re-verify before ending.",
   "loop_override": "\n## Operating loop\nRepeat until *Done when* is satisfied:\n1. **Understand** — clarify scope, constraints, and variation intent (see Discovery).\n2. **Explore** — read the provided design system, brand, and any linked resources before building.\n3. **Plan** — externalize a live todo list; keep it updated.\n4. **Build** — produce the artifact; copy only the assets you need; follow the existing visual vocabulary.\n5. **Verify** — run a dedicated verification pass; confirm it loads and works cleanly.\n6. **Fix & re-loop** — on any error, patch and re-verify before ending the turn.\n",

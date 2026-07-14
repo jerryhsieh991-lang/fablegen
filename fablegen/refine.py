@@ -8,10 +8,10 @@ import re
 
 from .generator import build_prompt, DEFAULT_HEURISTICS, DEFAULT_GUARDRAILS
 
-# The generated prompt now carries a discovery gate and a final-check block, so
-# the "lean" ceiling is a bit higher than a bare goal+loop prompt. A full,
-# well-formed prompt lands ~500-590 words; above this something got heavy.
-LEAN_WORD_BUDGET = 600
+# The generated prompt carries a discovery gate, a final-check block, and per-model
+# profile idioms/guardrails, so the "lean" ceiling sits a bit above a bare goal+loop
+# prompt. A full, well-formed prompt lands ~530-620 words; above this something got heavy.
+LEAN_WORD_BUDGET = 630
 
 
 def _words(text):

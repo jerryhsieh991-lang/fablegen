@@ -26,14 +26,14 @@ class TestCli(unittest.TestCase):
             self.assertTrue(out.strip())
 
     def test_diff_shows_differences(self):
-        code, out = _run(["diff", "opus-4.8", "gpt-5.5-instant", "draft launch copy"])
+        code, out = _run(["diff", "opus-4.8", "gpt-5.6", "draft launch copy"])
         self.assertEqual(code, 0)
         # unified diff markers + the differing discovery headers
         self.assertIn("---", out)
-        self.assertIn("mine context", out)  # gpt-only discovery line
+        self.assertIn("bias to action", out)  # gpt-5.6-only discovery line (assume-and-proceed)
 
     def test_diff_unknown_model_errors(self):
-        code, _ = _run(["diff", "opus-4.8", "llama-9000", "x"])
+        code, _ = _run(["diff", "opus-4.8", "wibble-x9000", "x"])
         self.assertEqual(code, 2)
 
     def test_to_profile_maps_model_ids(self):

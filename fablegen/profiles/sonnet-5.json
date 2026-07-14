@@ -1,17 +1,19 @@
 {
   "id": "sonnet-5",
   "display": "Claude Sonnet 5",
-  "family": "claude",
-  "tagline": "Precise instruction-follower — give explicit steps + a stop condition.",
+  "family": "anthropic",
+  "tagline": "Claude prompting, but more literal — spell out structure; it infers less than Opus.",
   "role_hint": null,
-  "effort_line": "Give explicit, itemized steps and a numeric effort/step budget with a concrete stop condition. Sonnet 5 follows precise instructions better than it infers, so spell out the desired behavior.",
-  "elicitation": "balanced",
+  "effort_line": "output_config.effort (low|medium|high|xhigh|max) is the primary dial, paired with adaptive thinking. On Opus 4.8 thinking is OFF unless you set thinking:{type:'adaptive'}; manual budget_tokens returns 400 (thinking:{type:'disabled'} is still accepted and equals omitting).",
+  "elicitation": "context-first",
   "idioms": [
-    "Give trigger → action example pairs, not just abstract rules.",
-    "State a numeric step/effort budget and an explicit stop condition for autonomous work."
+    "Front-load a complete spec in one turn: long documents at the TOP, query/instructions/examples at the END (up to ~30% quality gain on complex multi-doc inputs); wrap docs in <document>/<document_content>/<source>.",
+    "State scope explicitly — it's literal and won't generalize an instruction across items or infer unmade requests ('apply this to every section, not just the first'); give the reason behind a rule ('do X because Y') so it generalizes from the explanation."
   ],
-  "guardrail_extra": [],
-  "verify_note": null,
+  "guardrail_extra": [
+    "Don't use aggressive 'CRITICAL / you MUST / ALWAYS / if in doubt use X' tool-forcing — on 4.5/4.6+ (and the even-more-literal 4.7/4.8) it overtriggers tools/skills and overthinks; downgrade to plain 'Use this tool when...'."
+  ],
+  "verify_note": "Code-review harnesses regressed because 4.8 obeys 'only high-severity / be conservative' faithfully — instead instruct 'report every finding with confidence + severity; filter downstream.'",
   "loop_override": null,
-  "notes": "Mid-tier workhorse: fast, cost-efficient, optimized for precise instruction-following rather than open-ended inference. Needs more explicit, itemized steering than Opus: numbered decision steps with per-step stop conditions and concrete trigger->action examples. Let it act on reasonable defaults and state assumptions in one line; for any multi-step work, give a numeric budget and a checkable completion condition, since it doesn't sustain open-ended judgment as gracefully as Opus without one."
+  "notes": "Flagship of the 2026 line (Fable 5, Mythos 5, Opus 4.8/4.7/4.6/4.5, Sonnet 5/4.6, Haiku 4.5). 1M-token default context. The 'start at xhigh' advice is Opus-4.7/4.8-specific — Sonnet 5 defaults to high, Fable 5 starts at high; don't read it as universal. Sonnet 5 differs: adaptive thinking ON by default, a new tokenizer emits ~30% more tokens (retune max_tokens), non-default sampling 400. Haiku 4.5 is NOT in the effort/adaptive family — it still uses manual budget_tokens. Thinking display defaults to 'omitted' on newest models; set thinking.display:'summarized' to see reasoning. For noisy long-context corpora, ask it to extract relevant quotes into <quotes> first, then answer. Opus 4.8 has a persistent cream/serif frontend 'house style' — override it explicitly. Sonnet-specific: it is faster and more literal than Opus — it follows explicit structure well but infers less, so spell out steps and success criteria a touch more, and don't assume it will fill gaps the way Opus does."
 }

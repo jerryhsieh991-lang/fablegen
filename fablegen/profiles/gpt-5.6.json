@@ -1,0 +1,19 @@
+{
+  "id": "gpt-5.6",
+  "display": "GPT-5.6 (ChatGPT / Sol·Terra)",
+  "family": "openai",
+  "tagline": "Contract-follower: state the outcome once, cleanly, and let it choose the path — less instruction beats more, and contradictions hurt.",
+  "role_hint": null,
+  "effort_line": "Set `reasoning_effort` explicitly — none|low|medium|high|xhigh|max (5.6 default = medium) — and `text.verbosity` (low|medium|high). Then A/B one effort level LOWER on your evals; 5.6 is calibrated to match quality at lower cost.",
+  "elicitation": "assume-and-proceed",
+  "idioms": [
+    "Fence discrete instruction blocks in XML-style tags (<constraints>, <tool_usage_rules>, <output_spec>) with Markdown prose/bullets INSIDE — this is how OpenAI's own GPT-5 guides are written and it out-steers walls of Markdown headers.",
+    "For any structured output use strict Structured Outputs (Responses API text.format={type:'json_schema',name,strict:true,schema}; additionalProperties:false, every field required, optionals as ['string','null'], 'set null rather than guessing') and check the refusal field."
+  ],
+  "guardrail_extra": [
+    "Don't over-prompt: remove restated rules, redundant examples, and verbose tool descriptions (OpenAI's coding-agent evals show ~10-15% gain, -41-66% tokens — directional, validate on your tasks)."
+  ],
+  "verify_note": "Before shipping a large prompt, metaprompt it (ask GPT-5.6 to find internal conflicts/redundancy) or run the Playground Prompt Optimizer.",
+  "loop_override": null,
+  "notes": "GPT-5.6 'Sol' (GA 2026-07-09; tiers Sol/Sol Ultra/Terra/Luna) is a prompt-sensitive contract-follower: its instability comes from consistency problems, not length. Front-load Role/Goal/Constraints, keep stable content first for prompt caching, and dedupe. Prefer the Responses API; Chat Completions still uses response_format for structured output. Reasoning is opt-in — don't assume it. XML-fenced sections are documented in the 5.2 guide; the 'conflicting rules > missing detail' warning is on the 5.6 page; the ChatGPT Instant-vs-Thinking adaptive routing is a product-announcement detail, not developer-API behavior. Cite the model-specific reasoning page (none|low|medium|high|xhigh|max), not the generic family guide (which lists minimal, omits max)."
+}

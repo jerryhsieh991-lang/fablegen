@@ -4,7 +4,7 @@
   "family": "openai",
   "tagline": "Flat Markdown + numbered priorities; context-first, penalizes over-asking.",
   "role_hint": null,
-  "effort_line": "Use flat Markdown and numbered priority lists, not nested XML. State the desired length directly and say which steps to do silently vs. narrate.",
+  "effort_line": "Use flat Markdown and numbered priority lists, not nested XML. State the desired length directly and say which steps to do silently vs.",
   "elicitation": "context-first",
   "idioms": [
     "Arbitrate competing instructions with a numbered 'priority order' block.",

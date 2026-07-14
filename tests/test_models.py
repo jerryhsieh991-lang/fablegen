@@ -20,7 +20,7 @@ class TestMapping(unittest.TestCase):
         self.assertEqual(model_to_profile("claude-fable-5[1m]"), "fable-5")
 
     def test_unknown_model_returns_none(self):
-        self.assertIsNone(model_to_profile("llama-9000"))
+        self.assertIsNone(model_to_profile("wibble-x9000"))
 
 
 class TestDetect(unittest.TestCase):
@@ -59,7 +59,7 @@ class TestResolve(unittest.TestCase):
 
     def test_unknown_model_raises(self):
         with self.assertRaises(ValueError):
-            resolve_profile(model="llama-9000", config={})
+            resolve_profile(model="wibble-x9000", config={})
 
     def test_falls_back_to_settings_then_default(self):
         with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
